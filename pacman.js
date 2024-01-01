@@ -5,6 +5,7 @@ class Pacman {
         this.width = width;
         this.height = height;
         this.speed = speed;
+        this.direction = DIRECTION.RIGHT;
     }
 
     moveProcess() {
