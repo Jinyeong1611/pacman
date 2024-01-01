@@ -20,7 +20,22 @@ class Pacman {
 
     moveBackward() {}
 
-    moveForward() {}
+    moveForward() {
+        switch (this.direction) {
+            case DIRECTION.RIGHT:
+                this.x += this.speed;
+                break;
+            case DIRECTION.UP:
+                this.y -= this.speed;
+                break;
+            case DIRECTION.LEFT:
+                this.x -= this.speed;
+                break;
+            case DIRECTION.BOTTOM:
+                this.y += this.speed;
+                break;
+        }
+    }
 
     checkCollision() {}
 
