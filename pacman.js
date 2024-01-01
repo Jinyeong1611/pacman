@@ -61,4 +61,20 @@ class Pacman {
     changeAnimation() {}
 
     draw() {}
+
+    getMapX() {
+        return parseInt(this.x / blockSize);
+    }
+
+    getMapY() {
+        return parseInt(this.y / blockSize);
+    }
+
+    getMapXRightSide() {
+        return parseInt((this.x + 0.9999 * blockSize) / blockSize);
+    }
+
+    getMapYRightSide() {
+        return parseInt((this.y + 0.9999 * blockSize) / blockSize);
+    }
 }
