@@ -7,6 +7,12 @@ const fps = 30; // game fps
 const blockSize = 20; // One block size is 20 by 20 pixels
 const wallSpaceWidth = blockSize / 1.5;
 const wallOffset = (blockSize - wallSpaceWidth) / 2;
+const DIRECTION = {
+    RIGHT: 4,
+    UP: 3,
+    LEFT: 2,
+    BOTTOM: 1,
+};
 
 const colors = {
     wallColor: "#342dca",
