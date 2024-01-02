@@ -59,12 +59,14 @@ let gameLoop = () => {
 };
 
 let update = () => {
-    //todo
+    pacman.moveProcess();
 };
 
 let draw = () => {
     createRect(0, 0, canvas.width, canvas.height, "black");
     drawWalls();
+
+    pacman.draw();
 };
 
 let gameInterval = setInterval(gameLoop, 1000 / fps);
@@ -125,3 +127,31 @@ let drawWalls = () => {
         }
     }
 };
+
+let createNewPacman = () => {
+    pacman = new Pacman(
+        blockSize,
+        blockSize,
+        blockSize,
+        blockSize,
+        blockSize / 5
+    );
+};
+
+createNewPacman();
+gameLoop();
+window.addEventListener("keydown", (e) => {
+    let key = e.key;
+
+    setTimeout(() => {
+        if (key == "ArrowLeft" || "a") {
+            pacman.nextDirection = DIRECTION.LEFT;
+        } else if (key == "ArrowRight" || "d") {
+            pacman.nextDirection = DIRECTION.RIGHT;
+        } else if (key == "ArrowUp" || "w") {
+            pacman.nextDirection = DIRECTION.UP;
+        } else if (key == "ArrowDown" || "s") {
+            pacman.nextDirection = DIRECTION.BOTTOM;
+        }
+    }, 1);
+});

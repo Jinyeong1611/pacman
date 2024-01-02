@@ -1,95 +1,125 @@
 class Pacman {
-  constructor(x, y, width, height, speed) {
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
-    this.speed = speed;
-    this.direction = DIRECTION.RIGHT;
-  }
+    constructor(x, y, width, height, speed) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.speed = speed;
+        this.direction = DIRECTION.RIGHT;
+        this.currentFrame = 1; // 현재 sprite 프레임
+        this.frameCount = 7; // sprite 프레임 총 갯수
+        this.animationSpeed = 50;
+        this.nextDirection = this.direction;
 
-  moveProcess() {
-    this.changeDirectionIfPossible();
-    this.moveForward();
-    if (this.checkCollision()) {
-      this.moveBackward();
-    }
-  }
-
-  eat() {}
-
-  moveBackward() {
-    switch (this.direction) {
-      case DIRECTION.RIGHT:
-        this.x -= this.speed;
-        break;
-      case DIRECTION.UP:
-        this.y += this.speed;
-        break;
-      case DIRECTION.LEFT:
-        this.x += this.speed;
-        break;
-      case DIRECTION.BOTTOM:
-        this.y -= this.speed;
-        break;
-    }
-  }
-
-  moveForward() {
-    switch (this.direction) {
-      case DIRECTION.RIGHT:
-        this.x += this.speed;
-        break;
-      case DIRECTION.UP:
-        this.y -= this.speed;
-        break;
-      case DIRECTION.LEFT:
-        this.x -= this.speed;
-        break;
-      case DIRECTION.BOTTOM:
-        this.y += this.speed;
-        break;
-    }
-  }
-
-  checkCollision() {
-    let isCollided = false;
-    if (
-      map[this.getMapY()][this.getMapX()] == 1 ||
-      map[this.getMapYRightSide()][this.getMapX()] == 1 ||
-      map[this.getMapY()][this.getMapXRightSide()] == 1 ||
-      map[this.getMapYRightSide()][this.getMapXRightSide()] == 1
-    ) {
-      return true;
+        // 100ms마다 프레임 변경
+        setInterval(() => {
+            this.changeAnimation();
+        }, this.animationSpeed);
     }
 
-    return false;
-  }
+    moveProcess() {
+        this.changeDirectionIfPossible();
+        this.moveForward();
+        if (this.checkCollision()) {
+            this.moveBackward();
+        }
+    }
 
-  checkGhostCollision() {}
+    eat() {}
 
-  changeDirectionIfPossible() {}
+    moveBackward() {
+        switch (this.direction) {
+            case DIRECTION.RIGHT:
+                this.x -= this.speed;
+                break;
+            case DIRECTION.UP:
+                this.y += this.speed;
+                break;
+            case DIRECTION.LEFT:
+                this.x += this.speed;
+                break;
+            case DIRECTION.BOTTOM:
+                this.y -= this.speed;
+                break;
+        }
+    }
 
-  changeAnimation() {}
+    moveForward() {
+        switch (this.direction) {
+            case DIRECTION.RIGHT:
+                this.x += this.speed;
+                break;
+            case DIRECTION.UP:
+                this.y -= this.speed;
+                break;
+            case DIRECTION.LEFT:
+                this.x -= this.speed;
+                break;
+            case DIRECTION.BOTTOM:
+                this.y += this.speed;
+                break;
+        }
+    }
 
-  draw() {}
+    checkCollision() {
+        let isCollided = false;
+        if (
+            map[this.getMapY()][this.getMapX()] == 1 ||
+            map[this.getMapYRightSide()][this.getMapX()] == 1 ||
+            map[this.getMapY()][this.getMapXRightSide()] == 1 ||
+            map[this.getMapYRightSide()][this.getMapXRightSide()] == 1
+        ) {
+            return true;
+        }
 
-  // 현재 x좌표
-  getMapX() {
-    return parseInt(this.x / blockSize);
-  }
+        return false;
+    }
 
-  // 현재 y좌표
-  getMapY() {
-    return parseInt(this.y / blockSize);
-  }
+    checkGhostCollision() {}
 
-  //
-  getMapXRightSide() {
-    return parseInt((this.x + 0.9999 * blockSize) / blockSize);
-  }
+    changeDirectionIfPossible() {}
 
-  getMapYRightSide() {
-    return parseInt((this.y + 0.9999 * blockSize) / blockSize);
-  }
+    changeAnimation() {
+        // 스프라이트 프레임을 순환하게
+        this.currentFrame =
+            this.currentFrame == this.frameCount ? 1 : this.currentFrame + 1;
+    }
+
+    draw() {
+        ctx.save();
+        ctx.translate(this.x + blockSize / 2, this.y + blockSize / 2);
+        ctx.rotate((this.direction * 90 * Math.PI) / 180);
+        ctx.translate(-this.x - blockSize / 2, -this.y - blockSize / 2);
+        ctx.drawImage(
+            pacmanFrames,
+            (this.currentFrame - 1) * blockSize,
+            0,
+            blockSize,
+            blockSize,
+            this.x,
+            this.y,
+            this.width,
+            this.height
+        );
+        ctx.restore();
+    }
+
+    // 현재 x좌표
+    getMapX() {
+        return parseInt(this.x / blockSize);
+    }
+
+    // 현재 y좌표
+    getMapY() {
+        return parseInt(this.y / blockSize);
+    }
+
+    //
+    getMapXRightSide() {
+        return parseInt((this.x + 0.9999 * blockSize) / blockSize);
+    }
+
+    getMapYRightSide() {
+        return parseInt((this.y + 0.9999 * blockSize) / blockSize);
+    }
 }
