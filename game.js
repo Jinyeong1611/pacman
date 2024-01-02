@@ -22,6 +22,8 @@ const colors = {
 
 let score = 0;
 
+let pacman;
+
 // we now create the map of the walls,
 // if 1 wall, if 0 not wall
 // 21 columns // 23 rows
@@ -63,6 +65,7 @@ let gameLoop = () => {
 
 let update = () => {
     pacman.moveProcess();
+    pacman.eat();
 };
 
 let drawFoods = () => {
