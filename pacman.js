@@ -77,7 +77,26 @@ class Pacman {
 
     checkGhostCollision() {}
 
-    changeDirectionIfPossible() {}
+    changeDirectionIfPossible() {
+        if (this.direction == this.nextDirection) return;
+
+        // 현재 방향 임시 저장
+        let tempDirection = this.direction;
+        // 현재 방향을 다음 방향으로 전환
+        this.direction = this.nextDirection;
+        // 앞으로 이동
+        this.moveForward();
+        // 충돌시
+        if (this.checkCollision()) {
+            // 뒤로
+            this.moveBackward();
+            // 이전 방향으로 재설정
+            this.direction = tempDirection;
+        } else {
+            // 진행 가능시
+            this.moveBackward();
+        }
+    }
 
     changeAnimation() {
         // 스프라이트 프레임을 순환하게

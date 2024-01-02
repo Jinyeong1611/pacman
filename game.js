@@ -144,13 +144,13 @@ window.addEventListener("keydown", (e) => {
     let key = e.key;
 
     setTimeout(() => {
-        if (key == "ArrowLeft" || "a") {
+        if (key == "ArrowLeft" || key == "a") {
             pacman.nextDirection = DIRECTION.LEFT;
-        } else if (key == "ArrowRight" || "d") {
+        } else if (key == "ArrowRight" || key == "d") {
             pacman.nextDirection = DIRECTION.RIGHT;
-        } else if (key == "ArrowUp" || "w") {
+        } else if (key == "ArrowUp" || key == "w") {
             pacman.nextDirection = DIRECTION.UP;
-        } else if (key == "ArrowDown" || "s") {
+        } else if (key == "ArrowDown" || key == "s") {
             pacman.nextDirection = DIRECTION.BOTTOM;
         }
     }, 1);
