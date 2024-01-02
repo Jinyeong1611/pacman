@@ -17,6 +17,7 @@ const DIRECTION = {
 const colors = {
     wallColor: "#342dca",
     wallInnerColor: "#000000", // black
+    foodColor: "#feb897",
 };
 
 let createRect = (x, y, width, height, color) => {
@@ -62,10 +63,26 @@ let update = () => {
     pacman.moveProcess();
 };
 
+let drawFoods = () => {
+    for (let i = 0; i < map.length; i++) {
+        for (let j = 0; j < map[0].length; j++) {
+            if (map[i][j] == 2) {
+                createRect(
+                    j * blockSize + blockSize / 3,
+                    i * blockSize + blockSize / 3,
+                    blockSize / 3,
+                    blockSize / 3,
+                    colors.foodColor
+                );
+            }
+        }
+    }
+};
+
 let draw = () => {
     createRect(0, 0, canvas.width, canvas.height, "black");
     drawWalls();
-
+    drawFoods();
     pacman.draw();
 };
 
