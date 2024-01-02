@@ -20,10 +20,7 @@ const colors = {
     foodColor: "#feb897",
 };
 
-let createRect = (x, y, width, height, color) => {
-    ctx.fillStyle = color;
-    ctx.fillRect(x, y, width, height);
-};
+let score = 0;
 
 // we now create the map of the walls,
 // if 1 wall, if 0 not wall
@@ -53,6 +50,11 @@ let map = [
     [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ];
+
+let createRect = (x, y, width, height, color) => {
+    ctx.fillStyle = color;
+    ctx.fillRect(x, y, width, height);
+};
 
 let gameLoop = () => {
     update();
