@@ -1,6 +1,7 @@
 /** @type {HTMLCanvasElement} */
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
+
 const pacmanFrames = document.getElementById("animation");
 const ghostFrames = document.getElementById("ghosts");
 const fps = 30; // game fps
@@ -38,7 +39,7 @@ let map = [
     [1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1],
     [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
     [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1],
-    [2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2],
+    [1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1],
     [1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 2, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1],
     [0, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 0],
     [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
@@ -52,6 +53,9 @@ let map = [
     [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ];
+
+canvas.width = map[0].length * blockSize;
+canvas.height = 500;
 
 let createRect = (x, y, width, height, color) => {
     ctx.fillStyle = color;
@@ -84,11 +88,18 @@ let drawFoods = () => {
     }
 };
 
+let drawScore = () => {
+    ctx.font = "20px Emulogic";
+    ctx.fillStyle = "white";
+    ctx.fillText("Score: " + score, 0, blockSize * (map.length + 1));
+};
+
 let draw = () => {
     createRect(0, 0, canvas.width, canvas.height, "black");
     drawWalls();
     drawFoods();
     pacman.draw();
+    drawScore();
 };
 
 let gameInterval = setInterval(gameLoop, 1000 / fps);

@@ -10,19 +10,12 @@ class Pacman {
         this.frameCount = 7; // sprite 프레임 총 갯수
         this.animationSpeed = 50;
         this.nextDirection = this.direction;
-        this.prevPosX = this.getMapX();
-        this.prevPosY = this.getMapY();
         // 100ms마다 프레임 변경
         setInterval(() => {
             this.changeAnimation();
         }, this.animationSpeed);
     }
 
-    /**
-     * 1칸씩 이동
-     * 1칸을 완전히 이동하기 전엔 다른 이동 제한
-     * 벽에 막힐 시 반대 방향으로 이동
-     */
     moveProcess() {
         this.changeDirectionIfPossible();
         this.moveForward();
@@ -40,7 +33,7 @@ class Pacman {
                     this.getMapY() == i
                 ) {
                     map[i][j] = 3;
-                    score *= 10;
+                    score = score + 10;
                 }
             }
         }
@@ -99,8 +92,7 @@ class Pacman {
     // 현재 방향과 다른 방향으로 진행 가능하면 방향을 전환한다
     changeDirectionIfPossible() {
         if (this.direction == this.nextDirection) return;
-        if (this.getMapX() == this.prevPosX && this.getMapY() == this.prevPosY)
-            return;
+
         // 현재 방향 임시 저장
         let tempDirection = this.direction;
         // 현재 방향을 다음 방향으로 전환
@@ -117,18 +109,6 @@ class Pacman {
         } else {
             // 진행 가능시
             this.moveBackward();
-            this.updatePrevPos();
-        }
-    }
-
-    updatePrevPos() {
-        // 현재 위치와 다음 위치가 같으면
-        if (
-            this.getMapX() != this.nextPosX &&
-            this.getMapY() != this.nextPosY
-        ) {
-            this.prevPosX = this.getMapX();
-            this.prevPosY = this.getMapY();
         }
     }
 
