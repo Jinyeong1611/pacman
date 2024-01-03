@@ -33,7 +33,7 @@ let ghostLocations = [
     { x: 0, y: 121 },
     { x: 176, y: 121 },
 ];
-
+let ghostCount = 4;
 // we now create the map of the walls,
 // if 1 wall, if 0 not wall
 // 21 columns // 23 rows
@@ -190,7 +190,7 @@ let createNewPacman = () => {
 let createGhost = () => {
     ghosts = [];
 
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < ghostCount; i++) {
         let newGhost = new Ghost(
             9 * blockSize + (i % 2 == 0 ? 0 : 1) * blockSize,
             10 * blockSize + (i % 2 == 0 ? 0 : 1) * blockSize,
