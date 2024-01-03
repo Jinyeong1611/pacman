@@ -1,3 +1,4 @@
+// FIXME : 버벅이는 움직임 해결하기
 class Ghost {
     /**
      *
@@ -10,7 +11,7 @@ class Ghost {
      * @param {number} imageY 오브젝트 이미지의 Y좌표
      * @param {number} imageWidth 오브젝트 이미지의 너비
      * @param {number} imageHeight 오브젝트 이미지의 높이
-     * @param {number} range
+     * @param {number} range 인식범위
      */
     constructor(
         x,
@@ -61,6 +62,7 @@ class Ghost {
         this.moveForward();
         if (this.checkCollision()) {
             this.moveBackward();
+            return;
         }
     }
 
@@ -99,17 +101,17 @@ class Ghost {
     }
 
     checkCollision() {
-        let isCollided = false;
+        let collided = false;
         if (
             map[this.getMapY()][this.getMapX()] == 1 ||
             map[this.getMapYRightSide()][this.getMapX()] == 1 ||
             map[this.getMapY()][this.getMapXRightSide()] == 1 ||
             map[this.getMapYRightSide()][this.getMapXRightSide()] == 1
         ) {
-            return true;
+            collided = true;
         }
 
-        return false;
+        return collided;
     }
 
     // 인식범위 안에 팩맨이 있는지 확인
@@ -203,7 +205,7 @@ class Ghost {
         if (
             // 왼쪽
             poped.x - 1 >= 0 &&
-            poped.x - 1 < numOfRows &&
+            poped.x - 1 < numOfCols &&
             mp[poped.y][poped.x - 1] != 1
         ) {
             let tempMoves = poped.moves.slice(); // 인자값 없이 slice를 사용하면 배열을 복제하는 효과를 낸다
@@ -214,7 +216,7 @@ class Ghost {
         if (
             // 오른쪽
             poped.x + 1 >= 0 &&
-            poped.x + 1 < numOfRows &&
+            poped.x + 1 < numOfCols &&
             mp[poped.y][poped.x + 1] != 1
         ) {
             let tempMoves = poped.moves.slice(); // 인자값 없이 slice를 사용하면 배열을 복제하는 효과를 낸다
@@ -225,7 +227,7 @@ class Ghost {
         if (
             // 위
             poped.y - 1 >= 0 &&
-            poped.y - 1 < numOfCols &&
+            poped.y - 1 < numOfRows &&
             mp[poped.y - 1][poped.x] != 1
         ) {
             let tempMoves = poped.moves.slice(); // 인자값 없이 slice를 사용하면 배열을 복제하는 효과를 낸다
@@ -236,7 +238,7 @@ class Ghost {
         if (
             // 아래
             poped.y + 1 >= 0 &&
-            poped.y + 1 < numOfCols &&
+            poped.y + 1 < numOfRows &&
             mp[poped.y + 1][poped.x] != 1
         ) {
             let tempMoves = poped.moves.slice(); // 인자값 없이 slice를 사용하면 배열을 복제하는 효과를 낸다
