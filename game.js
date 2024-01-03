@@ -86,6 +86,7 @@ let update = () => {
     pacman.moveProcess();
     pacman.eat();
 
+    // 고스트 이동
     for (let i = 0; i < ghosts.length; i++) {
         ghosts[i].moveProcess();
     }
@@ -203,7 +204,7 @@ let createGhost = () => {
     for (let i = 0; i < ghostCount; i++) {
         let newGhost = new Ghost(
             9 * blockSize + (i % 2 == 0 ? 0 : 1) * blockSize,
-            10 * blockSize + (i % 2 == 0 ? 0 : 1) * blockSize,
+            10 * blockSize + (i < ghostCount / 2 ? 0 : 1) * blockSize,
             blockSize,
             blockSize,
             pacman.speed / 2,
