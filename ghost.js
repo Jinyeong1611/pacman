@@ -35,33 +35,32 @@ class Ghost {
         this.imageWidth = imageWidth;
         this.imageHeight = imageHeight;
         this.range = range;
+        this.target;
+        this.randomTargetIndex = parseInt(
+            Math.random() * RandomTargetsForGhosts.length,
+        );
 
-        // 100ms마다 프레임 변경
         setInterval(() => {
-            this.changeAnimation();
-        }, this.animationSpeed);
+            this.changeRandomDirection();
+        }, 10000);
+    }
+
+    changeRandomDirection() {
+        this.randomTargetIndex += 1;
+        this.randomTargetIndex =
+            this.randomTargetIndex % RandomTargetsForGhosts.length;
     }
 
     moveProcess() {
+        if (this.isInRangeOfPacman()) {
+            this.target = pacman;
+        } else {
+            this.target = RandomTargetsForGhosts[this.randomTargetIndex];
+        }
         this.changeDirectionIfPossible();
         this.moveForward();
         if (this.checkCollision()) {
             this.moveBackward();
-        }
-    }
-
-    eat() {
-        for (let i = 0; i < map.length; i++) {
-            for (let j = 0; j < map[0].length; j++) {
-                if (
-                    map[i][j] == 2 &&
-                    this.getMapX() == j &&
-                    this.getMapY() == i
-                ) {
-                    map[i][j] = 3;
-                    score = score + 10;
-                }
-            }
         }
     }
 
@@ -113,35 +112,139 @@ class Ghost {
         return false;
     }
 
-    checkGhostCollision() {}
+    // 인식범위 안에 팩맨이 있는지 확인
+    isInRangeOfPacman() {
+        // 팩맨까지 x 거리
+        let xDistance = Math.abs(pacman.getMapX() - this.getMapX());
+        // 팩맨까지 y 거리
+        let yDistance = Math.abs(pacman.getMapX() - this.getMapY());
+
+        // 직선 거리
+        let distance = Math.sqrt(xDistance * xDistance + yDistance * yDistance); // distance = sqrt(dx^2 + dy^2)
+
+        // 직선 거리로 인식범위 내에 있을 시
+        if (distance <= this.range) {
+            return true;
+        }
+        return false;
+    }
 
     // 현재 방향과 다른 방향으로 진행 가능하면 방향을 전환한다
     changeDirectionIfPossible() {
-        if (this.direction == this.nextDirection) return;
-
-        // 현재 방향 임시 저장
         let tempDirection = this.direction;
-        // 현재 방향을 다음 방향으로 전환
-        this.direction = this.nextDirection;
 
-        // 앞으로 이동
+        this.direction = this.calculateNewDirection(
+            map,
+            parseInt(this.target.x / blockSize),
+            parseInt(this.target.y / blockSize),
+        );
+
+        if (typeof this.direction == "undefined") {
+            this.direction = tempDirection;
+            return;
+        }
+
         this.moveForward();
-        // 충돌시
         if (this.checkCollision()) {
-            // 뒤로
             this.moveBackward();
-            // 이전 방향으로 재설정
             this.direction = tempDirection;
         } else {
-            // 진행 가능시
             this.moveBackward();
         }
     }
 
-    changeAnimation() {
-        // 스프라이트 프레임을 순환하게
-        this.currentFrame =
-            this.currentFrame == this.frameCount ? 1 : this.currentFrame + 1;
+    /**
+     *
+     * @param {Array} map 게임 맵
+     * @param {number} destX 목적 X좌표
+     * @param {number} destY 목적 Y좌표
+     * @returns
+     */
+    calculateNewDirection(map, destX, destY) {
+        let mp = []; // 맵 배열 복사
+        for (let i = 0; i < map.length; i++) {
+            mp[i] = map[i].slice();
+        }
+
+        // 큐 생성
+        let queue = [
+            {
+                x: this.getMapX(),
+                y: this.getMapY(),
+                moves: [],
+            },
+        ];
+
+        // 큐에서 하나씩 꺼내며
+        while (queue.length > 0) {
+            let poped = queue.shift();
+            // ㅇ
+            if (poped.x == destX && poped.y == destY) {
+                return poped.moves[0];
+            } else {
+                mp[poped.y][poped.x] = 1;
+                let neighborList = this.addNeighbors(poped, mp);
+
+                for (let i = 0; i < neighborList.length; i++) {
+                    queue.push(neighborList[i]);
+                }
+            }
+        }
+
+        return DIRECTION.UP; //default
+    }
+
+    addNeighbors(poped, mp) {
+        let queue = [];
+        let numOfRows = mp.length;
+        let numOfCols = mp[0].length;
+
+        // 상하좌우 각각 네 방향으로 길이 막혀있지 않으면 큐에 추가한다
+        if (
+            // 왼쪽
+            poped.x - 1 >= 0 &&
+            poped.x - 1 < numOfRows &&
+            mp[poped.y][poped.x - 1] != 1
+        ) {
+            let tempMoves = poped.moves.slice(); // 인자값 없이 slice를 사용하면 배열을 복제하는 효과를 낸다
+            tempMoves.push(DIRECTION.LEFT); // 방향 추가
+            queue.push({ x: poped.x - 1, y: poped.y, moves: tempMoves }); // 추가한 방향을 담아 queue로 보낸다
+        }
+
+        if (
+            // 오른쪽
+            poped.x + 1 >= 0 &&
+            poped.x + 1 < numOfRows &&
+            mp[poped.y][poped.x + 1] != 1
+        ) {
+            let tempMoves = poped.moves.slice(); // 인자값 없이 slice를 사용하면 배열을 복제하는 효과를 낸다
+            tempMoves.push(DIRECTION.RIGHT); // 방향 추가
+            queue.push({ x: poped.x - 1, y: poped.y, moves: tempMoves }); // 추가한 방향을 담아 queue로 보낸다
+        }
+
+        if (
+            // 위
+            poped.y - 1 >= 0 &&
+            poped.y - 1 < numOfCols &&
+            mp[poped.y - 1][poped.x] != 1
+        ) {
+            let tempMoves = poped.moves.slice(); // 인자값 없이 slice를 사용하면 배열을 복제하는 효과를 낸다
+            tempMoves.push(DIRECTION.UP); // 방향 추가
+            queue.push({ x: poped.x, y: poped.y - 1, moves: tempMoves }); // 추가한 방향을 담아 queue로 보낸다
+        }
+
+        if (
+            // 아래
+            poped.y + 1 >= 0 &&
+            poped.y + 1 < numOfCols &&
+            mp[poped.y + 1][poped.x] != 1
+        ) {
+            let tempMoves = poped.moves.slice(); // 인자값 없이 slice를 사용하면 배열을 복제하는 효과를 낸다
+            tempMoves.push(DIRECTION.BOTTOM); // 방향 추가
+            queue.push({ x: poped.x, y: poped.y + 1, moves: tempMoves }); // 추가한 방향을 담아 queue로 보낸다
+        }
+
+        return queue;
     }
 
     draw() {
