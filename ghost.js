@@ -1,4 +1,17 @@
 class Ghost {
+    /**
+     *
+     * @param {number} x canvas상의 x좌표
+     * @param {number} y canvas상의 x좌표
+     * @param {number} width 오브젝트의 너비
+     * @param {number} height 오브젝트의 높이
+     * @param {number} speed 오브젝트의 속도
+     * @param {number} imageX 오브젝트 이미지의 X좌표
+     * @param {number} imageY 오브젝트 이미지의 Y좌표
+     * @param {number} imageWidth 오브젝트 이미지의 너비
+     * @param {number} imageHeight 오브젝트 이미지의 높이
+     * @param {number} range
+     */
     constructor(
         x,
         y,
