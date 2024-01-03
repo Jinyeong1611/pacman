@@ -9,31 +9,6 @@ const fps = 30; // game fps
 const blockSize = 20; // One block size is 20 by 20 pixels
 const wallSpaceWidth = blockSize / 1.5;
 const wallOffset = (blockSize - wallSpaceWidth) / 2;
-const DIRECTION = {
-    RIGHT: 4,
-    UP: 3,
-    LEFT: 2,
-    BOTTOM: 1,
-};
-
-const colors = {
-    wallColor: "#342dca",
-    wallInnerColor: "#000000", // black
-    foodColor: "#feb897",
-};
-
-let score = 0;
-
-let pacman;
-let ghosts = [];
-// ghost sprite의 vertex 좌표
-let ghostLocations = [
-    { x: 0, y: 0 },
-    { x: 176, y: 0 },
-    { x: 0, y: 121 },
-    { x: 176, y: 121 },
-];
-let ghostCount = 4;
 // we now create the map of the walls,
 // if 1 wall, if 0 not wall
 // 21 columns // 23 rows
@@ -62,6 +37,37 @@ let map = [
     [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ];
+const DIRECTION = {
+    RIGHT: 4,
+    UP: 3,
+    LEFT: 2,
+    BOTTOM: 1,
+};
+
+const colors = {
+    wallColor: "#342dca",
+    wallInnerColor: "#000000", // black
+    foodColor: "#feb897",
+};
+
+let score = 0;
+
+let pacman;
+let ghosts = [];
+// ghost sprite의 vertex 좌표
+let ghostLocations = [
+    { x: 0, y: 0 },
+    { x: 176, y: 0 },
+    { x: 0, y: 121 },
+    { x: 176, y: 121 },
+];
+let ghostCount = 4; // 고스트 수
+let RandomTargetsForGhosts = [
+    { x: 1 * blockSize, y: 1 * blockSize }, // left-up
+    { x: 1 * blockSize, y: (map.length - 2) * blockSize }, // left-bottom
+    { x: (map[0].length - 2) * blockSize, y: 1 * blockSize }, //right-up
+    { x: (map[0].length - 2) * blockSize, y: (map.length - 2) * blockSize }, //right-bottom
+];
 
 canvas.width = map[0].length * blockSize;
 canvas.height = 500;
@@ -79,6 +85,10 @@ let gameLoop = () => {
 let update = () => {
     pacman.moveProcess();
     pacman.eat();
+
+    for (let i = 0; i < ghosts.length; i++) {
+        ghosts[i].moveProcess();
+    }
 };
 
 let drawFoods = () => {
