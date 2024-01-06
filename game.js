@@ -7,7 +7,7 @@ const pacmanFrames = document.getElementById("animation");
 const ghostFrames = document.getElementById("ghost");
 const fps = 30; // game fps
 const blockSize = 20; // One block size is 20 by 20 pixels
-const wallSpaceWidth = blockSize / 1.5;
+const wallSpaceWidth = blockSize / 1.6;
 const wallOffset = (blockSize - wallSpaceWidth) / 2;
 // we now create the map of the walls,
 // if 1 wall, if 0 not wall
@@ -85,11 +85,7 @@ let gameLoop = () => {
 let update = () => {
     pacman.moveProcess();
     pacman.eat();
-
-    // 고스트 이동
-    for (let i = 0; i < ghosts.length; i++) {
-        ghosts[i].moveProcess();
-    }
+    updateGhosts();
 };
 
 let drawFoods = () => {
@@ -114,19 +110,14 @@ let drawScore = () => {
     ctx.fillText("Score: " + score, 0, blockSize * (map.length + 1));
 };
 
-let drawGhosts = () => {
-    for (let i = 0; i < ghosts.length; i++) {
-        ghosts[i].draw();
-    }
-};
-
 let draw = () => {
+    // clear screen
     createRect(0, 0, canvas.width, canvas.height, "black");
     drawWalls();
     drawFoods();
+    drawGhosts();
     pacman.draw();
     drawScore();
-    drawGhosts();
 };
 
 let gameInterval = setInterval(gameLoop, 1000 / fps);
