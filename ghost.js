@@ -236,7 +236,7 @@ class Ghost {
         if (
             // 왼쪽
             poped.x - 1 >= 0 &&
-            poped.x - 1 < numOfCols &&
+            poped.x - 1 < numOfRows &&
             mp[poped.y][poped.x - 1] != 1
         ) {
             let tempMoves = poped.moves.slice(); // 인자값 없이 slice를 사용하면 배열을 복제하는 효과를 낸다
@@ -247,7 +247,7 @@ class Ghost {
         if (
             // 오른쪽
             poped.x + 1 >= 0 &&
-            poped.x + 1 < numOfCols &&
+            poped.x + 1 < numOfRows &&
             mp[poped.y][poped.x + 1] != 1
         ) {
             let tempMoves = poped.moves.slice(); // 인자값 없이 slice를 사용하면 배열을 복제하는 효과를 낸다
@@ -258,7 +258,7 @@ class Ghost {
         if (
             // 위
             poped.y - 1 >= 0 &&
-            poped.y - 1 < numOfRows &&
+            poped.y - 1 < numOfCols &&
             mp[poped.y - 1][poped.x] != 1
         ) {
             let tempMoves = poped.moves.slice(); // 인자값 없이 slice를 사용하면 배열을 복제하는 효과를 낸다
@@ -269,7 +269,7 @@ class Ghost {
         if (
             // 아래
             poped.y + 1 >= 0 &&
-            poped.y + 1 < numOfRows &&
+            poped.y + 1 < numOfCols &&
             mp[poped.y + 1][poped.x] != 1
         ) {
             let tempMoves = poped.moves.slice(); // 인자값 없이 slice를 사용하면 배열을 복제하는 효과를 낸다
@@ -308,10 +308,10 @@ class Ghost {
 
     //
     getMapXRightSide() {
-        return parseInt((this.x + 0.9999 * blockSize) / blockSize);
+        return parseInt((this.x + 0.99 * blockSize) / blockSize);
     }
 
     getMapYRightSide() {
-        return parseInt((this.y + 0.9999 * blockSize) / blockSize);
+        return parseInt((this.y + 0.99 * blockSize) / blockSize);
     }
 }
