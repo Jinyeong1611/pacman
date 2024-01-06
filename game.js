@@ -214,7 +214,7 @@ let createGhost = () => {
             ghostLocations[i % 4].y,
             124,
             116,
-            6 + i,
+            9,
         );
         ghosts.push(newGhost);
     }

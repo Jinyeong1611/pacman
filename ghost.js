@@ -1,4 +1,3 @@
-// FIXME : 버벅이는 움직임 해결하기
 class Ghost {
     /**
      *
@@ -43,7 +42,7 @@ class Ghost {
 
         setInterval(() => {
             this.changeRandomDirection();
-        }, 10000);
+        }, 5000);
     }
 
     changeRandomDirection() {
@@ -287,16 +286,16 @@ class Ghost {
         );
         ctx.restore();
         // check the range
-        ctx.beginPath();
-        ctx.strokeStyle = "red";
-        ctx.arc(
-            this.x + blockSize / 2,
-            this.y + blockSize / 2,
-            this.range * blockSize,
-            0,
-            2 * Math.PI,
-        );
-        ctx.stroke();
+        // ctx.beginPath();
+        // ctx.strokeStyle = "red";
+        // ctx.arc(
+        //     this.x + blockSize / 2,
+        //     this.y + blockSize / 2,
+        //     this.range * blockSize,
+        //     0,
+        //     2 * Math.PI,
+        // );
+        // ctx.stroke();
     }
 
     getMapX() {
