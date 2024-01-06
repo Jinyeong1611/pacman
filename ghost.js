@@ -36,10 +36,10 @@ class Ghost {
         this.imageWidth = imageWidth;
         this.imageHeight = imageHeight;
         this.range = range;
-        this.target;
         this.randomTargetIndex = parseInt(
             Math.random() * RandomTargetsForGhosts.length,
         );
+        this.target = RandomTargetsForGhosts[this.randomTargetIndex];
 
         setInterval(() => {
             this.changeRandomDirection();
@@ -53,11 +53,13 @@ class Ghost {
     }
 
     moveProcess() {
-        if (this.isInRangeOfPacman()) {
+        // 범위 안 팩맨 유무 검사
+        if (this.isInRange()) {
             this.target = pacman;
         } else {
             this.target = RandomTargetsForGhosts[this.randomTargetIndex];
         }
+
         this.changeDirectionIfPossible();
         this.moveForward();
         if (this.checkCollision()) {
@@ -100,13 +102,22 @@ class Ghost {
         }
     }
 
+    // 충돌 검사
     checkCollision() {
         let collided = false;
         if (
-            map[this.getMapY()][this.getMapX()] == 1 ||
-            map[this.getMapYRightSide()][this.getMapX()] == 1 ||
-            map[this.getMapY()][this.getMapXRightSide()] == 1 ||
-            map[this.getMapYRightSide()][this.getMapXRightSide()] == 1
+            map[parseInt(this.y / oneBlockSize)][
+                parseInt(this.x / oneBlockSize)
+            ] == 1 ||
+            map[parseInt(this.y / oneBlockSize + 0.9999)][
+                parseInt(this.x / oneBlockSize)
+            ] == 1 ||
+            map[parseInt(this.y / oneBlockSize)][
+                parseInt(this.x / oneBlockSize + 0.9999)
+            ] == 1 ||
+            map[parseInt(this.y / oneBlockSize + 0.9999)][
+                parseInt(this.x / oneBlockSize + 0.9999)
+            ] == 1
         ) {
             collided = true;
         }
@@ -115,7 +126,7 @@ class Ghost {
     }
 
     // 인식범위 안에 팩맨이 있는지 확인
-    isInRangeOfPacman() {
+    isInRange() {
         // 팩맨까지 x 거리
         let xDistance = Math.abs(pacman.getMapX() - this.getMapX());
         // 팩맨까지 y 거리
