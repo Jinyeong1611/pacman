@@ -35,6 +35,14 @@ class Pacman {
                     map[i][j] = 3;
                     score = score + 10;
                 }
+                if (
+                    map[i][j] == 4 &&
+                    this.getMapX() == j &&
+                    this.getMapY() == i
+                ) {
+                    map[i][j] = 3;
+                    score = score + 50;
+                }
             }
         }
     }
@@ -87,7 +95,19 @@ class Pacman {
         return false;
     }
 
-    checkGhostCollision() {}
+    checkGhostCollision() {
+        let isCollided = false;
+        for (let i = 0; i < ghosts.length; i++) {
+            let ghost = ghosts[i];
+            if (
+                ghost.getMapX() == this.getMapX() &&
+                ghost.getMapY() == this.getMapY()
+            ) {
+                isCollided = true;
+            }
+        }
+        return isCollided;
+    }
 
     // 현재 방향과 다른 방향으로 진행 가능하면 방향을 전환한다
     changeDirectionIfPossible() {
@@ -132,7 +152,7 @@ class Pacman {
             this.x,
             this.y,
             this.width,
-            this.height
+            this.height,
         );
         ctx.restore();
     }

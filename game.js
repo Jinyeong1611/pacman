@@ -1,3 +1,5 @@
+// FIXME : 음식 리필 시 스페셜 푸드 위치 버그 수정하기
+
 /** @type {HTMLCanvasElement} */
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -14,19 +16,19 @@ const wallOffset = (blockSize - wallSpaceWidth) / 2;
 // 21 columns // 23 rows
 let map = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+    [1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 4, 1],
     [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
     [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
     [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
     [1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1],
     [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1],
     [1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1],
-    [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 2, 1, 4, 2, 2, 2, 2, 2, 4, 1, 2, 1, 0, 0, 0, 0],
     [1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1],
-    [1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1],
+    [1, 4, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 4, 1],
     [1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 2, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1],
     [0, 0, 0, 0, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 0, 0, 0],
-    [0, 0, 0, 0, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 2, 1, 4, 2, 2, 2, 2, 2, 4, 1, 2, 1, 0, 0, 0, 0],
     [1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1],
     [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
     [1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
@@ -34,7 +36,7 @@ let map = [
     [1, 1, 2, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 2, 1, 1],
     [1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1],
     [1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1],
-    [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+    [1, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ];
 const DIRECTION = {
@@ -48,10 +50,11 @@ const colors = {
     wallColor: "#342dca",
     wallInnerColor: "#000000", // black
     foodColor: "#feb897",
+    specialFoodColor: "#52f7b5",
 };
 
 let score = 0;
-
+let lives = 3;
 let pacman;
 let ghosts = [];
 // ghost sprite의 vertex 좌표
@@ -68,6 +71,18 @@ let RandomTargetsForGhosts = [
     { x: (map[0].length - 2) * blockSize, y: 1 * blockSize }, //right-up
     { x: (map[0].length - 2) * blockSize, y: (map.length - 2) * blockSize }, //right-bottom
 ];
+let specialFoods = [
+    { x: 1, y: 1 },
+    { x: map[0].length - 2, y: 1 },
+    { x: 1, y: map.length - 2 },
+    { x: map[0].length - 2, y: map.length - 2 },
+    { x: 7, y: 8 },
+    { x: 13, y: 8 },
+    { x: 7, y: 13 },
+    { x: 13, y: 13 },
+    { x: 1, y: 10 },
+    { x: map[0].length - 1, y: 10 },
+];
 
 canvas.width = map[0].length * blockSize;
 canvas.height = 500;
@@ -80,10 +95,39 @@ let createRect = (x, y, width, height, color) => {
 let refillFoods = () => {
     for (let i = 0; i < map.length; i++) {
         for (let j = 0; j < map[0].length; j++) {
+            let isSpecialFood = false;
             if (map[i][j] == 3) {
-                map[i][j] = 2;
+                for (let i = 0; i < specialFoods.length; i++) {
+                    if (specialFoods[i].x == j && specialFoods[i].y == i) {
+                        isSpecialFood = true;
+                    }
+                }
+
+                map[i][j] = isSpecialFood ? 4 : 2;
             }
         }
+    }
+};
+
+let drawLives = () => {
+    ctx.font = "bold 22px Segou";
+    ctx.fillStyle = "white";
+    ctx.fillText("Lives: " + lives, 250, blockSize * (map.length + 2));
+};
+
+let gameOver = () => {
+    clearInterval(gameInterval);
+    clearInterval(refillFoodsInterval);
+};
+
+let restartGame = () => {
+    refillFoods();
+    createNewPacman();
+    createGhost();
+    --lives;
+
+    if (lives <= 0) {
+        gameOver();
     }
 };
 
@@ -96,6 +140,9 @@ let update = () => {
     pacman.moveProcess();
     pacman.eat();
     updateGhosts();
+    if (pacman.checkGhostCollision()) {
+        restartGame();
+    }
 };
 
 let drawFoods = () => {
@@ -109,15 +156,23 @@ let drawFoods = () => {
                     blockSize / 3,
                     colors.foodColor,
                 );
+            } else if (map[i][j] == 4) {
+                createRect(
+                    j * blockSize + blockSize / 4,
+                    i * blockSize + blockSize / 4,
+                    blockSize / 2,
+                    blockSize / 2,
+                    colors.specialFoodColor,
+                );
             }
         }
     }
 };
 
 let drawScore = () => {
-    ctx.font = "20px Emulogic";
+    ctx.font = "bold 22px Segou";
     ctx.fillStyle = "white";
-    ctx.fillText("Score: " + score, 0, blockSize * (map.length + 1));
+    ctx.fillText("Score: " + score, 0, blockSize * (map.length + 2));
 };
 
 let draw = () => {
@@ -128,10 +183,11 @@ let draw = () => {
     drawGhosts();
     pacman.draw();
     drawScore();
+    drawLives();
 };
 
 let gameInterval = setInterval(gameLoop, 1000 / fps);
-let refillFoodsInterval = setInterval(refillFoods, 30000); // 30초마다 음식 리필
+let refillFoodsInterval = setInterval(refillFoods, 1000); // 30초마다 음식 리필
 
 let drawWalls = () => {
     for (let i = 0; i < map.length; i++) {
@@ -192,8 +248,8 @@ let drawWalls = () => {
 
 let createNewPacman = () => {
     pacman = new Pacman(
-        blockSize,
-        blockSize,
+        blockSize * 10,
+        blockSize * 21,
         blockSize,
         blockSize,
         blockSize / 5,
