@@ -144,17 +144,34 @@ class Ghost {
 
     // 현재 방향과 다른 방향으로 진행 가능하면 방향을 전환한다
     changeDirectionIfPossible() {
+        // 현재 진행 방향을 임시로 저장
         let tempDirection = this.direction;
 
+        // 새로운 방향을 계산한다
         this.direction = this.calculateNewDirection(
             map,
             parseInt(this.target.x / blockSize),
             parseInt(this.target.y / blockSize),
         );
 
+        // 예외처리
         if (typeof this.direction == "undefined") {
             this.direction = tempDirection;
             return;
+        }
+
+        if (
+            this.getMapY() != this.getMapYRightSide() &&
+            (this.direction == DIRECTION_LEFT ||
+                this.direction == DIRECTION_RIGHT)
+        ) {
+            this.direction = DIRECTION_UP;
+        }
+        if (
+            this.getMapX() != this.getMapXRightSide() &&
+            this.direction == DIRECTION_UP
+        ) {
+            this.direction = DIRECTION_LEFT;
         }
 
         this.moveForward();
@@ -164,6 +181,8 @@ class Ghost {
         } else {
             this.moveBackward();
         }
+
+        console.log("this.direction :>> ", this.direction);
     }
 
     /**
@@ -184,6 +203,8 @@ class Ghost {
             {
                 x: this.getMapX(),
                 y: this.getMapY(),
+                rightX: this.getMapXRightSide(),
+                rightY: this.getMapYRightSide(),
                 moves: [],
             },
         ];
@@ -191,7 +212,6 @@ class Ghost {
         // 큐에서 하나씩 꺼내며
         while (queue.length > 0) {
             let poped = queue.shift();
-            // ㅇ
             if (poped.x == destX && poped.y == destY) {
                 return poped.moves[0];
             } else {
