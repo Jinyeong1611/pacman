@@ -77,6 +77,16 @@ let createRect = (x, y, width, height, color) => {
     ctx.fillRect(x, y, width, height);
 };
 
+let refillFoods = () => {
+    for (let i = 0; i < map.length; i++) {
+        for (let j = 0; j < map[0].length; j++) {
+            if (map[i][j] == 3) {
+                map[i][j] = 2;
+            }
+        }
+    }
+};
+
 let gameLoop = () => {
     update();
     draw();
@@ -121,6 +131,7 @@ let draw = () => {
 };
 
 let gameInterval = setInterval(gameLoop, 1000 / fps);
+let refillFoodsInterval = setInterval(refillFoods, 30000); // 30초마다 음식 리필
 
 let drawWalls = () => {
     for (let i = 0; i < map.length; i++) {
@@ -211,6 +222,7 @@ let createGhost = () => {
 
 createNewPacman();
 createGhost();
+refillFoods();
 gameLoop();
 window.addEventListener("keydown", (e) => {
     let key = e.key;

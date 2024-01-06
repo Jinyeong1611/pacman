@@ -184,7 +184,7 @@ class Ghost {
             this.moveBackward();
         }
 
-        console.log("this.direction :>> ", this.direction);
+        // console.log("this.direction :>> ", this.direction);
     }
 
     /**
